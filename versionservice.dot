@@ -1,0 +1,44 @@
+digraph G {
+  rankdir=LR
+
+  subgraph cluster_1 {
+    label = "Version Service\n(platform/prod)"
+    node [style=filled];
+    color=blue
+    subgraph cluster_1_1 {
+      color=green
+      label = "DynamoDB"
+
+      dynamodb [ label="version_service" ]
+    }
+    subgraph cluster_1_2 {
+      label = "k8s-prod"
+      app1 [ label="version\nservice" ]
+      app2 [ label="version\nservice" ]
+
+      vs_ingress [ label = "ingress\ninternal" ]
+    }
+
+  }
+
+  subgraph cluster_2 {
+    label = "Slackbot"
+
+    { rank=same
+      slackbot
+      announce
+    }
+
+    slack_ingress [ label = "ingress\npublic" ]
+  }
+
+  subgraph cluster_3 {
+    label = "CLI"
+
+    vsc
+  }
+
+  slack_saas [ style=dotted label = "Slack SaaS" ];
+  slack_saas -> slack_ingress -> slackbot
+  {slackbot announce vsc } -> vs_ingress -> { app1, app2 } -> dynamodb
+}

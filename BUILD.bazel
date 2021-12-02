@@ -1,0 +1,34 @@
+load("@bazel_gazelle//:def.bzl", "gazelle")
+load("//bzl:macros.bzl", "dot")
+
+package(default_visibility = ["//visibility:public"])
+
+# load gazelle -- it also formats BUILD.bazel files.  Since I typically use GoLang eventually in a
+# project, I just start with Bazel for fewer dependencies rather than writing my BUILD files for me.
+# I get a formatter, and a go dependnecy resolver for free!
+gazelle(
+    name = "gazelle",
+    extra_args = [
+        "-build_file_name",
+        "BUILD.bazel",
+        "-exclude",
+        ".gitlab",
+        "-exclude",
+        "3rdParty",
+        "-external",
+        "vendored",
+    ],
+)
+
+genrule(
+    name = "loadbalancer-basic",
+    srcs = ["loadbalancer.dot"],
+    outs = ["loadbalancer.png"],
+    cmd = "dot -Tpng $< > $@",
+)
+
+# TODO: use bzl/graphviz for better handling of toolset and avoid shelling out
+
+dot(
+    name = "versionservice"
+)

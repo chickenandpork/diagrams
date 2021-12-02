@@ -1,0 +1,25 @@
+digraph G {
+  rankdir=LR
+
+  subgraph cluster_1 {
+    node [style=filled];
+    label = "us-east-2\nvpc-04a5182f98fdb1f20 (prod)"
+    color=blue
+    subgraph cluster_2 {
+        color=green
+        label = "subnet-07199439897724d1b (prod-web-us-east-2a)"
+
+        "prod-wordpress-1"
+        "prod-wordpress-2"
+    }
+    lb -> { 
+      "prod-wordpress-1"
+      "prod-wordpress-2"
+    }
+  }
+
+  lb [label="prod-wordpress\nelb-76432129"];
+  unwashed_internet [ shape=invisible style=invisible ];
+  unwashed_internet -> lb
+  
+}
