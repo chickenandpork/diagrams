@@ -1,0 +1,32 @@
+digraph G {
+  rankdir=TB
+
+
+  subgraph cluster_1 {
+    node [style=filled];
+    label = "v2 Secrets"
+
+    secret [ label="secret\n(k8s object)"]
+
+    color=blue
+    subgraph cluster_2 {
+        color=green
+        label = "Subscriber\nBankcore Service"
+
+        bankcore1 [ shape=record label="bankcore\nreplica | { <sec> mount|mount2|mount3}" ]
+        bankcore2 [ shape=record label="bankcore\nreplica | { <sec> mount|mount2|mount3}" ]
+        bankcore3 [ shape=record label="bankcore\nreplica | { <sec> mount|mount2|mount3}" ]
+    }
+    subgraph cluster_3 {
+        color=red
+        label = "Publisher\n(cli/k8s-job)"
+
+        "publisher"
+    }
+  }
+
+  publisher -> secret
+  secret -> bankcore1:sec [ label="mount" style="dotted" ]
+  secret -> bankcore2:sec [ label="mount" style="dotted" ]
+  secret -> bankcore3:sec [ label="mount" style="dotted" ]
+}

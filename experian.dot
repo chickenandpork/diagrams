@@ -1,0 +1,27 @@
+digraph G {
+  rankdir=LR
+
+  subgraph cluster_1 {
+    node [style=filled];
+    label = "Legacy Secrets"
+    color=blue
+    subgraph cluster_2 {
+        color=green
+        label = "Subscriber\nBankcore"
+
+        "prod-bankcore-1"
+        "prod-bankcore-2"
+        "prod-bankcore-3"
+    }
+    subgraph cluster_3 {
+        color=red
+        label = "Publisher\n(puppet)"
+
+        "publisher"
+    }
+  }
+
+  publisher ->  "prod-bankcore-1" [ label="secret" ]
+  publisher ->  "prod-bankcore-2" [ label="secret" ]
+  publisher ->  "prod-bankcore-3" [ label="secret" ]
+}

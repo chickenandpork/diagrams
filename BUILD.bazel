@@ -20,15 +20,20 @@ gazelle(
     ],
 )
 
-genrule(
-    name = "loadbalancer-basic",
-    srcs = ["loadbalancer.dot"],
-    outs = ["loadbalancer.png"],
-    cmd = "dot -Tpng $< > $@",
-)
-
 # TODO: use bzl/graphviz for better handling of toolset and avoid shelling out
 
 dot(
-    name = "versionservice"
+    name = "loadbalancer",
+)
+
+dot(
+    name = "experian",
+)
+
+dot(
+    name = "experian-v2",
+)
+
+dot(
+    name = "versionservice",
 )
