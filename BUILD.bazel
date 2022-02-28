@@ -23,6 +23,10 @@ gazelle(
 # TODO: use bzl/graphviz for better handling of toolset and avoid shelling out
 
 dot(
+    name = "k8s-build-dependencies",
+)
+
+dot(
     name = "loadbalancer",
 )
 

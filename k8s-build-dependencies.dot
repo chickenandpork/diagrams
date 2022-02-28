@@ -1,0 +1,16 @@
+digraph G {
+  rankdir=LR
+
+  node [style=filled];
+    color=blue
+  eks -> { tfstate atlantis vpc cicd_dev atlantis_prod bastion }
+  cicd -> { iam_dev eks }
+  alb -> eks
+  atlantis -> { alb dns } -> eks
+  graf -> { eks prometheus elsearch }
+  prometheus -> eks
+  elsearch -> { eks vpc }
+  elscurator -> { elsearch eks }
+  kube_state_metrics -> eks
+  runner -> { cicd alb }
+}
