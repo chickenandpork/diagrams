@@ -1,0 +1,37 @@
+digraph G {
+  rankdir=BT
+
+  subgraph cluster_1 {
+    node [style=filled];
+    color=blue
+
+    label = "get yer own basis\nsink or swim, punk"
+
+    docean1 [ label="D.Ocean" ]
+    mcar1A  [ label="Micheal #1" ]
+    mcar1B  [ label="Micheal #2" ]
+    allanc1  [ label="Allan #1" ]
+
+    mcar1B -> mcar1A
+    { mcar1A allanc1 } -> docean1
+
+    mcar1B -> allanc1 [ weight=0 label="greater skew" dir=both style=dotted ]
+  }
+
+  subgraph cluster_2 {
+    node [style=filled];
+    color=green
+
+    label = "base tally from\ncarruthers number 1"
+
+    docean2  [ label="D.Ocean" ]
+    mcar2A  [ label="Micheal #1" ]
+    mcar2B  [ label="Micheal #2" ]
+    allanc2  [ label="Allan #1" ]
+
+    { rank=same mcar2B allanc2 }
+    { mcar2B allanc2 } -> mcar2A -> docean2
+
+    mcar2B -> allanc2 [ weight=0 label="lesser skew" dir=both style=dotted ]
+  }
+}

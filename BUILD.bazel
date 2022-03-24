@@ -23,11 +23,7 @@ gazelle(
 # TODO: use bzl/graphviz for better handling of toolset and avoid shelling out
 
 dot(
-    name = "k8s-build-dependencies",
-)
-
-dot(
-    name = "loadbalancer",
+    name = "docgeneology",
 )
 
 dot(
@@ -36,6 +32,14 @@ dot(
 
 dot(
     name = "experian-v2",
+)
+
+dot(
+    name = "k8s-build-dependencies",
+)
+
+dot(
+    name = "loadbalancer",
 )
 
 dot(
