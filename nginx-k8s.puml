@@ -1,0 +1,26 @@
+@startuml k8s dev.meettally.com
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User")
+System_Boundary(k8sdev, "k8s-dev") {
+System(ingress, "ingress\n(internal)")
+System(service, "dev.meettally.com\nservice")
+    Container(nginx1, "Nginx Pod", "Nginx manually configured", "proxy-passes or 3xx redirects user to upstream\n\nMay rewrite streams")
+    Container(nginx2, "Nginx Pod", "Nginx manually configured", "proxy-passes or 3xx redirects user to upstream\n\nMay rewrite streams")
+}
+System(upstream1, "Upstream Service")
+System(upstream2, "Upstream Service")
+System(upstream3, "Upstream Service")
+
+Rel(user, ingress, "Uses", "VPN")
+Rel(ingress, service, "Uses", "tcp/8080")
+Rel(service, nginx1, "Uses", "random_port")
+Rel(service, nginx2, "Uses", "random_port")
+
+Rel(nginx1, upstream1, "proxy_pass", "HTTP(S)")
+Rel(nginx1, upstream2, "proxy_pass", "HTTP")
+Rel(nginx1, upstream3, "proxy_pass", "HTTP")
+Rel(nginx2, upstream1, "proxy_pass", "HTTP")
+Rel(nginx2, upstream2, "proxy_pass", "HTTP")
+Rel(nginx2, upstream3, "proxy_pass", "HTTP")
+@enduml

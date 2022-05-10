@@ -1,0 +1,17 @@
+@startuml EC2 dev.meettally.com
+// http://www.plantuml.com/plantuml/uml/SyfFKj2rKt3CoKnELR1Io4ZDoSa70000
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User")
+System_Boundary(ec2, "EC2 service") {
+    Container(nginx, "Nginx", "Nginx manually configured", "proxy-passes or 3xx redirects user to upstream\n\nMay rewrite streams")
+}
+System(upstream1, "Upstream Service")
+System(upstream2, "Upstream Service")
+System(upstream3, "Upstream Service")
+
+Rel(user, nginx, "Uses", "HTTPS")
+Rel(nginx, upstream1, "proxy_pass", "HTTP")
+Rel(nginx, upstream2, "proxy_pass", "HTTP")
+Rel(nginx, upstream3, "proxy_pass", "HTTP")
+@enduml
