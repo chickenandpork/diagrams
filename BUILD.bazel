@@ -23,6 +23,22 @@ gazelle(
 # TODO: use bzl/graphviz for better handling of toolset and avoid shelling out
 
 dot(
+    name = "buildcontainers",
+)
+
+dot(
+    name = "docker-executor",
+)
+
+dot(
+    name = "docker-in-docker",
+)
+
+dot(
+    name = "docker-in-docker-build",
+)
+
+dot(
     name = "docgeneology",
 )
 
@@ -44,8 +60,4 @@ dot(
 
 dot(
     name = "versionservice",
-)
-
-dot(
-    name = "buildcontainers",
 )

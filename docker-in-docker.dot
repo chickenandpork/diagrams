@@ -1,0 +1,33 @@
+digraph G {
+
+  subgraph cluster_0 {
+    label = "Gitlab SaaS"
+    node [style=filled];
+    color=orange
+
+    saas [ name="gitlab.com" ]
+  }
+
+  subgraph cluster_1 {
+    label = "k8s-build"
+    color=green
+
+    subgraph cluster_1_1 {
+      label = "Executor"
+      node [style=filled];
+      executor [ name="k8s-executor" ]
+    }
+
+    subgraph cluster_1_2 {
+      label = "Docker CNI"
+      subgraph cluster_1_2_1 {
+        label = "Build Pod"
+        node [style=filled];
+        build helper "svc-0"
+
+  { saas -> executor -> saas [ style=dotted ]; }
+  { rank=same    executor -> { build helper "svc-0" } [ style=dotted headlabel="deploy" ]; }
+      }
+    }
+  }
+}
