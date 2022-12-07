@@ -59,5 +59,9 @@ dot(
 )
 
 dot(
+    name = "trafficlight",
+)
+
+dot(
     name = "versionservice",
 )
