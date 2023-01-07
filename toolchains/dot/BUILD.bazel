@@ -1,0 +1,52 @@
+"""toolchain to wrap a 'dot' binary in the PATH; enables fetch of a missing binary
+
+Type: @com_github_chickenandpork_diagrams//toolchains/dot:dot_toolchain_type
+
+Toolchains:
+- dot_auto_toolchain: a toolchain that uses the installed dot.  Needs find_system_dot.
+"""
+
+load("//toolchains/dot:dot.bzl", "dot_toolchain", "is_dot_available")
+load("//toolchains/dot:tool.bzl", "current_dot_toolchain")
+
+# Expose the availability of an actual dot as a config_setting, so we can
+# select() on it.
+config_setting(
+    name = "have_dot",
+    flag_values = {
+        ":is_dot_available": "1",
+    },
+    visibility = ["//visibility:public"],
+)
+
+# Expose the availability of an actual dot as a feature flag, so we can
+# create a config_setting from it.
+is_dot_available(
+    name = "is_dot_available",
+    visibility = ["//:__subpackages__"],
+)
+
+toolchain_type(
+    name = "dot_toolchain_type",
+    visibility = ["//visibility:public"],
+)
+
+# dot_missing_toolchain provides a fallback toolchain so that toolchain resolution can succeed even
+# on platforms that do not have a working dot.  If this toolchain is selected, the constraint
+# ":have_dot" will not be satistifed, allowing a software-controlled reduction in targets rather
+# than an immediate failure during analysis.
+dot_toolchain(
+    name = "no_dot_available",
+)
+
+toolchain(
+    name = "dot_missing_toolchain",
+    toolchain = ":no_dot_available",
+    toolchain_type = ":dot_toolchain_type",
+)
+
+# convert toolchain to just-a-binary for inclusion in genrules suck as bzl:macros.bzl%dot()
+current_dot_toolchain(
+    name = "current_dot_toolchain",
+    visibility = ["//visibility:public"],
+)
