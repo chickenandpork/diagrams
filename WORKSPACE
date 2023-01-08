@@ -1,4 +1,4 @@
-workspace(name = "pepper")
+workspace(name = "com_github_chickenandpork_diagrams")
 
 #### Eventually used
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
@@ -24,6 +24,12 @@ http_archive(
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+load("//toolchains/dot:dot_configure.bzl", "find_system_dot")
+
+find_system_dot(
+    "system_dot",
+    verbose = True,
+)
 
 go_rules_dependencies()
 
