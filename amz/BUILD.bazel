@@ -1,0 +1,41 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_binary(
+    name = "amz",
+    embed = [":lib"],
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "lib",
+    srcs = ["example.go"],
+    importpath = "github.com/chickenandpork/diagrams/amz",
+    visibility = ["//visibility:private"],
+    deps = [
+        "@com_github_blushft_go_diagrams//diagram",
+        "@com_github_blushft_go_diagrams//nodes/gcp",
+    ],
+)
+
+genrule(
+    name = "example-graphar",
+    srcs = [":amz"],
+    outs = ["example-graph.tar"],
+
+    # the resulting binary sets default Name to be "go-diagrams" and lacks exposed option to change
+    # (obviously trivial but likely something the author didn't need but did have foresight to
+    # carry); the Filename "app" in example.go sets the "app.dot" filename
+    cmd = "$< && ls -al && ls -al go-diagrams && tar -c -C go-diagrams -f $@ app.dot assets",
+)
+
+genrule(
+    name = "render-graphar",
+    srcs = [":example-graphar"],
+    outs = ["example.png"],
+
+    # the tarball we send in here is at the root of the generated content: a (conventionally)
+    # "app.dot" driven by the graph name, plus a subdir of assets.  We don't care about that here,
+    # we just want to pass this to "dot" and call it done.
+    cmd = "tar xf $< && $(DOT) -o $@ -T png app.dot && ls -al $$(pwd)/$@",
+    toolchains = ["//toolchains/dot:current_dot_toolchain"],
+)
