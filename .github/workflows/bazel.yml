@@ -1,5 +1,8 @@
 name: Bazel build
 
+env:
+  HOMEBREW_NO_AUTO_UPDATE: 1
+
 on: [push]
 
 jobs:
@@ -8,10 +11,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v3
-      - uses: bazelbuild/setup-bazelisk@v2
+      # action runners have bazelisk: - uses: bazelbuild/setup-bazelisk@v2
       - name: Mount bazel cache  # Optional
         uses: actions/cache@v3
         with:

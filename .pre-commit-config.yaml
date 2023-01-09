@@ -7,6 +7,14 @@
 # Check all the things!  Check the checkers!
 ---
 repos:
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.11.0
+    hooks:
+      - id: yamllint
+        args: [
+          '-d',
+          '{extends: relaxed, rules: {line-length: {max: 120}}}'
+        ]
   - repo: https://github.com/segmentio/golines.git
     rev: v0.11.0
     hooks:
