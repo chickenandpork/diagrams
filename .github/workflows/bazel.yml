@@ -1,0 +1,25 @@
+name: Bazel build
+
+env:
+  HOMEBREW_NO_AUTO_UPDATE: 1
+
+on: [push]
+
+jobs:
+  build:
+    name: Build on node ${{ matrix.node-version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v3
+      # action runners have bazelisk: - uses: bazelbuild/setup-bazelisk@v2
+      - name: Mount bazel cache  # Optional
+        uses: actions/cache@v3
+        with:
+          path: "~/.cache/bazel"
+          key: bazel
+      - name: Setup Graphviz
+        uses: ts-graphviz/setup-graphviz@v1
+      - run: bazel build //...
