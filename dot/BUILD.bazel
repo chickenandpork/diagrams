@@ -33,6 +33,10 @@ dot(
 )
 
 dot(
+    name = "infra",
+)
+
+dot(
     name = "k8s-build-dependencies",
 )
 
