@@ -3,3 +3,4 @@ bazel-diagrams
 bazel-out
 bazel-testlogs
 .DS_Store
+MODULE.bazel.lock
