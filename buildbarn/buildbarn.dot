@@ -1,0 +1,23 @@
+digraph G {
+  rankdir=LR
+
+  subgraph cluster_1 {
+    label = "Alpine"
+    node [style=filled];
+    color=blue
+    "runatlantis" [ style=dotted ];
+    "runatlantis" -> "Atlantis"
+  }
+
+  subgraph cluster_2 {
+    label = "AmazonLinux2"
+    node [style=filled];
+    color=orange
+
+    AL2 [ name="AmazonLinux2" style=dotted ];
+    AL2 -> { base dind }
+    base -> { mkdocs bazel }
+
+    dind -> { base mkdocs bazel Atlantis } [ headlabel="builds" style=dotted ];
+  }
+}

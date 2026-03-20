@@ -1,0 +1,49 @@
+load("//bzl:macros.bzl", "dot")
+
+package(default_visibility = ["//visibility:public"])
+
+# TODO: use bzl/graphviz for better handling of toolset and avoid shelling out
+
+dot(
+    name = "buildcontainers",
+)
+
+dot(
+    name = "docker-executor",
+)
+
+dot(
+    name = "docker-in-docker",
+)
+
+dot(
+    name = "docker-in-docker-build",
+)
+
+dot(
+    name = "docgeneology",
+)
+
+dot(
+    name = "experian",
+)
+
+dot(
+    name = "experian-v2",
+)
+
+dot(
+    name = "infra",
+)
+
+dot(
+    name = "k8s-build-dependencies",
+)
+
+dot(
+    name = "loadbalancer",
+)
+
+dot(
+    name = "versionservice",
+)
