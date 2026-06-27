@@ -17,5 +17,5 @@ def dot(
         srcs = [source_name],
         outs = [output_name],
         cmd = "$(DOT) -T%s $< > $@" % imagetype,
-        toolchains = ["//toolchains/dot:current_dot_toolchain"],
+        toolchains = ["@@//toolchains/dot:current_dot_toolchain"],
     )

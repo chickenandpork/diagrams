@@ -41,9 +41,9 @@ current_dot_toolchain = rule(
     """,
     implementation = _current_dot_toolchain_impl,
     attrs = {
-        "_toolchain": attr.string(default = str(Label("@com_github_chickenandpork_diagrams//toolchains/dot:dot_toolchain_type"))),
+        "_toolchain": attr.string(providers = str(Label("//toolchains/dot:dot_toolchain_type"))),
     },
     toolchains = [
-        str(Label("@com_github_chickenandpork_diagrams//toolchains/dot:dot_toolchain_type")),
+        str(Label("@@//toolchains/dot:dot_toolchain_type")),
     ],
 )

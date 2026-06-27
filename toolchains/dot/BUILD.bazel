@@ -1,6 +1,6 @@
 """toolchain to wrap a 'dot' binary in the PATH; enables fetch of a missing binary
 
-Type: @com_github_chickenandpork_diagrams//toolchains/dot:dot_toolchain_type
+Type: @@//toolchains/dot:dot_toolchain_type
 
 Toolchains:
 - dot_auto_toolchain: a toolchain that uses the installed dot.  Needs find_system_dot.

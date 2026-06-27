@@ -50,7 +50,7 @@ dot_toolchain = rule(
 
 # Expose the presence of an dot in the resolved toolchain as a flag.
 def _is_dot_available_impl(ctx):
-    toolchain = ctx.toolchains["@com_github_chickenandpork_diagrams//toolchains/dot:dot_toolchain_type"].dot
+    toolchain = ctx.toolchains["@@//toolchains/dot:dot_toolchain_type"].dot
     return [config_common.FeatureFlagInfo(
         value = ("1" if toolchain.valid else "0"),
     )]
@@ -58,8 +58,8 @@ def _is_dot_available_impl(ctx):
 is_dot_available = rule(
     implementation = _is_dot_available_impl,
     attrs = {},
-    toolchains = ["@com_github_chickenandpork_diagrams//toolchains/dot:dot_toolchain_type"],
+    toolchains = ["@@//toolchains/dot:dot_toolchain_type"],
 )
 
 def dot_register_toolchains():
-    native.register_toolchains("@com_github_chickenandpork_diagrams//toolchains/dot:dot_missing_toolchain")
+    native.register_toolchains("@@//toolchains/dot:dot_missing_toolchain")
