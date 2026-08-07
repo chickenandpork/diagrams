@@ -1,0 +1,106 @@
+package main
+
+import (
+	"log"
+
+	diagrams "github.com/blushft/go-diagrams/diagrams"
+
+	k8s "github.com/blushft/go-diagrams/diagrams/k8s"
+	compute "github.com/blushft/go-diagrams/diagrams/k8s/compute"
+	network "github.com/blushft/go-diagrams/diagrams/k8s/network"
+	storage "github.com/blushft/go-diagrams/diagrams/k8s/storage"
+)
+
+// NOTE: go-diagrams does not have perfect 1:1 AWS/EKS icons,
+// so we approximate using k8s primitives.
+
+func main() {
+	d, err := diagrams.New(diagrams.Config{
+		Title:     "BuildBuddy on Kubernetes (EKS-style)",
+		Filename:  "buildbuddy-eks",
+		Direction: "TB",
+		OutFormat: "png",
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// ─────────────────────────────
+	// Entry layer
+	// ─────────────────────────────
+	ing := network.NewIngress(d, "Ingress")
+
+	cluster := diagrams.NewCluster(d, "Kubernetes Cluster")
+
+	ingCtrl := network.NewIngress(cluster, "Ingress Controller")
+	ing.Connect(ingCtrl)
+
+	// ─────────────────────────────
+	// Frontend / API tier
+	// ─────────────────────────────
+	apiCluster := diagrams.NewCluster(cluster, "API / UI")
+
+	bbportal := compute.NewPod(apiCluster, "bbportal")
+	buildbuddy := compute.NewPod(apiCluster, "buildbuddy (API)")
+	bbbrowser := compute.NewPod(apiCluster, "bbbrowser")
+
+	ingCtrl.Connect(bbportal)
+	ingCtrl.Connect(buildbuddy)
+	ingCtrl.Connect(bbbrowser)
+
+	// ─────────────────────────────
+	// Scheduler tier
+	// ─────────────────────────────
+	schedCluster := diagrams.NewCluster(cluster, "Scheduling")
+
+	bbscheduler := compute.NewPod(schedCluster, "bbscheduler")
+
+	buildbuddy.Connect(bbscheduler)
+
+	// ─────────────────────────────
+	// Remote Execution Workers
+	// ─────────────────────────────
+	workerCluster := diagrams.NewCluster(cluster, "Remote Execution Workers")
+
+	worker1 := compute.NewPod(workerCluster, "worker-1")
+	worker2 := compute.NewPod(workerCluster, "worker-2")
+	worker3 := compute.NewPod(workerCluster, "worker-3")
+
+	bbscheduler.Connect(worker1)
+	bbscheduler.Connect(worker2)
+	bbscheduler.Connect(worker3)
+
+	// ─────────────────────────────
+	// Cache / Storage tier
+	// ─────────────────────────────
+	cacheCluster := diagrams.NewCluster(cluster, "Cache + Storage")
+
+	bbstorage := compute.NewPod(cacheCluster, "bbstorage (CAS)")
+	redis := storage.NewPersistentVolume(cacheCluster, "Redis")
+
+	// Workers + API use CAS
+	buildbuddy.Connect(bbstorage)
+	worker1.Connect(bbstorage)
+	worker2.Connect(bbstorage)
+	worker3.Connect(bbstorage)
+
+	// Redis used by scheduler + API
+	buildbuddy.Connect(redis)
+	bbscheduler.Connect(redis)
+
+	// ─────────────────────────────
+	// External object storage (optional)
+	// ─────────────────────────────
+	external := diagrams.NewCluster(d, "External Services")
+
+	objectStore := storage.NewStorage(external, "S3 / GCS")
+
+	bbstorage.Connect(objectStore)
+
+	// ─────────────────────────────
+	// Render
+	// ─────────────────────────────
+	if err := d.Render(); err != nil {
+		log.Fatal(err)
+	}
+}
